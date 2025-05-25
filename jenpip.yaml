@@ -1,0 +1,32 @@
+pipeline:
+  agent:
+    any: true
+
+  environment:
+    DEPLOY_KEY: your-ssh-key-id  # Jenkins credentials ID
+
+  stages:
+    - stage: Clone Repository
+      steps:
+        - git: 
+            url: https://github.com/shamikroyadhikary/GCP.git
+
+    - stage: Run Tests
+      steps:
+        - sh: |
+            chmod +x test.sh
+            ./test.sh
+
+    - stage: Deploy
+      steps:
+        - sh: |
+            chmod +x deploy.sh
+            ./deploy.sh
+
+  post:
+    failure:
+      steps:
+        - echo: "Build failed!"
+    success:
+      steps:
+        - echo: "Deployment successful!"
